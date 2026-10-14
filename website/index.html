@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeluTube Dub - Translate YouTube Videos to English-Telugu Mix Voice</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E11D48',
+              redDark: '#BE123C',
+              darkBg: '#090D16',
+              cardBg: '#111827',
+              border: '#1F2937',
+              indigo: '#6366F1',
+              teal: '#0D9488'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts: Inter & Noto Sans Telugu -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans Telugu', sans-serif;
+      background-color: #090D16;
+      color: #F9FAFB;
+    }
+    .telugu-font {
+      font-family: 'Noto Sans Telugu', sans-serif;
+    }
+    .gradient-badge {
+      background: linear-gradient(135deg, #E11D48 0%, #6366F1 100%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.8); }
+    }
+    .active-dub-glow {
+      animation: pulseGlow 1.5s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 bg-[#0B0F19]/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-red to-indigo-600 flex items-center justify-center shadow-lg shadow-rose-900/40">
+          <i class="fa-solid fa-play text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-extrabold tracking-tight text-white">TeluTube <span class="text-brand-red">Dub</span></span>
+            <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">Web Edition</span>
+          </div>
+          <p class="text-xs text-gray-400">YouTube Video Voice Translation to English-Telugu Mix (Tenglish)</p>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="flex items-center space-x-3">
+        <button id="apiKeyModalBtn" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-gray-300 border border-gray-700 transition">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <span id="apiKeyStatusLabel">API Key</span>
+        </button>
+        <a href="#howItWorks" class="hidden sm:inline-flex text-xs text-gray-400 hover:text-white transition">
+          How It Works
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero / Input Card -->
+    <section class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="max-w-3xl mx-auto space-y-5">
+        <div class="text-center space-y-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Translate YouTube Videos to <span class="bg-gradient-to-r from-rose-400 to-indigo-400 bg-clip-text text-transparent">English-Telugu Mix</span>
+          </h1>
+          <p class="text-sm text-gray-400">
+            Translates the voice in video into conversational Tenglish with speaker voice cloning and downloadable audio files.
+          </p>
+        </div>
+
+        <!-- URL Input Group -->
+        <div class="space-y-3">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                <i class="fa-brands fa-youtube text-red-500 text-lg"></i>
+              </div>
+              <input 
+                type="text" 
+                id="youtubeUrlInput" 
+                placeholder="Paste YouTube video link (e.g. https://www.youtube.com/watch?v=k1BneeJTDcU)"
+                value="https://www.youtube.com/watch?v=k1BneeJTDcU"
+                class="w-full pl-11 pr-24 py-3 bg-gray-950/80 border border-gray-700 rounded-xl text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition"
+              />
+              <button 
+                id="pasteBtn" 
+                class="absolute inset-y-1.5 right-1.5 px-3 bg-gray-800 hover:bg-gray-700 text-xs font-medium text-gray-300 rounded-lg flex items-center space-x-1.5 border border-gray-700 transition"
+              >
+                <i class="fa-regular fa-clipboard"></i>
+                <span>Paste</span>
+              </button>
+            </div>
+
+            <!-- Translate Fast Button -->
+            <button 
+              id="translateBtn" 
+              class="px-6 py-3 bg-gradient-to-r from-brand-red to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-rose-900/30 flex items-center justify-center space-x-2 transition transform active:scale-95 disabled:opacity-50"
+            >
+              <i class="fa-solid fa-bolt text-yellow-300"></i>
+              <span>Translate Very Fast</span>
+            </button>
+          </div>
+
+          <!-- Turbo Mode & Options -->
+          <div class="flex flex-wrap items-center justify-between text-xs text-gray-400 gap-2 px-1">
+            <div class="flex items-center space-x-2">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="turboModeToggle" class="sr-only peer" checked>
+                <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500"></div>
+              </label>
+              <span class="font-medium text-gray-300 flex items-center space-x-1">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span>Ultra-Fast Gemini Flash Mode</span>
+              </span>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <span>Voice Mode:</span>
+              <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 font-semibold">Tenglish Mix (తెలుగు + English)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Quick Demos -->
+        <div class="pt-2">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-gray-400">Instant 1-Click Sample Videos:</span>
+            <span class="text-[11px] text-brand-red font-medium">Zero-wait Demo</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button class="preset-btn p-2 rounded-xl bg-gray-950/60 border border-gray-800 hover:border-gray-700 text-left transition flex items-center space-x-2.5" data-id="k1BneeJTDcU" data-title="Flagship Smartphone Review">
+              <img src="https://img.youtube.com/vi/k1BneeJTDcU/hqdefault.jpg" class="w-12 h-9 rounded object-cover" alt="Phone">
+              <div class="truncate">
+                <div class="text-[11px] font-bold text-white truncate">Tech Review</div>
+                <div class="text-[10px] text-gray-400 truncate">Phone Camera</div>
+              </div>
+            </button>
+            <button class="preset-btn p-2 rounded-xl bg-gray-950/60 border border-gray-800 hover:border-gray-700 text-left transition flex items-center space-x-2.5" data-id="y881t8ilMyc" data-title="Black Holes & Deep Cosmos">
+              <img src="https://img.youtube.com/vi/y881t8ilMyc/hqdefault.jpg" class="w-12 h-9 rounded object-cover" alt="Space">
+              <div class="truncate">
+                <div class="text-[11px] font-bold text-white truncate">Science Cosmos</div>
+                <div class="text-[10px] text-gray-400 truncate">Black Holes</div>
+              </div>
+            </button>
+            <button class="preset-btn p-2 rounded-xl bg-gray-950/60 border border-gray-800 hover:border-gray-700 text-left transition flex items-center space-x-2.5" data-id="UF8uR6Z6KLc" data-title="Steve Jobs Stanford Speech">
+              <img src="https://img.youtube.com/vi/UF8uR6Z6KLc/hqdefault.jpg" class="w-12 h-9 rounded object-cover" alt="Speech">
+              <div class="truncate">
+                <div class="text-[11px] font-bold text-white truncate">Motivation</div>
+                <div class="text-[10px] text-gray-400 truncate">Stay Foolish</div>
+              </div>
+            </button>
+            <button class="preset-btn p-2 rounded-xl bg-gray-950/60 border border-gray-800 hover:border-gray-700 text-left transition flex items-center space-x-2.5" data-id="zwwy3Z32RZs" data-title="Hyderabadi Food Recipe">
+              <img src="https://img.youtube.com/vi/zwwy3Z32RZs/hqdefault.jpg" class="w-12 h-9 rounded object-cover" alt="Food">
+              <div class="truncate">
+                <div class="text-[11px] font-bold text-white truncate">Cooking Recipe</div>
+                <div class="text-[10px] text-gray-400 truncate">Quick Biryani</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace (Video Player + Voice Dub Controls + Transcript) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Video Player & Voice Controls (lg:col-span-7) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Video Player Card -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+          <div class="aspect-video w-full bg-black relative">
+            <iframe 
+              id="ytPlayerIframe" 
+              class="w-full h-full"
+              src="https://www.youtube.com/embed/k1BneeJTDcU?enablejsapi=1&rel=0&modestbranding=1" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <!-- Video Title & Overview -->
+          <div class="p-4 bg-gray-900/90 border-t border-gray-800 space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 id="videoTitleDisplay" class="text-base font-bold text-white line-clamp-1">Smartphone Innovation Review - Flagship Camera & Specs</h2>
+                <p id="videoAuthorDisplay" class="text-xs text-gray-400">Channel: Tech Explorers • 4K HDR</p>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
+                Synced Dub
+              </span>
+            </div>
+
+            <!-- Tenglish Summary Box -->
+            <div class="p-3 rounded-xl bg-gray-950/80 border border-gray-800">
+              <div class="flex items-center space-x-1.5 text-xs font-bold text-brand-red mb-1">
+                <i class="fa-solid fa-language"></i>
+                <span>English-Telugu Mix Overview:</span>
+              </div>
+              <p id="videoSummaryTenglish" class="text-xs text-gray-300 leading-relaxed">
+                Ee video lo flagship release gurinchi complete review mariyu key insights ni natural English-Telugu mix lo explain chesam.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Dubbing Control Bar -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <!-- Play/Pause Dub Button -->
+            <div class="flex items-center space-x-3">
+              <button 
+                id="playDubVoiceBtn"
+                class="px-5 py-2.5 rounded-xl bg-brand-red hover:bg-rose-600 text-white font-bold text-sm shadow-lg shadow-rose-900/40 flex items-center space-x-2 transition active:scale-95"
+              >
+                <i id="playIcon" class="fa-solid fa-play"></i>
+                <span id="playText">Play Dubbed Voice</span>
+              </button>
+
+              <button 
+                id="stopDubVoiceBtn"
+                class="px-3.5 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-sm transition"
+                title="Stop playback"
+              >
+                <i class="fa-solid fa-stop"></i>
+              </button>
+            </div>
+
+            <!-- Mute Original Video Audio Toggle -->
+            <div class="flex items-center space-x-2 bg-gray-950 px-3 py-1.5 rounded-xl border border-gray-800 text-xs">
+              <i class="fa-solid fa-volume-xmark text-gray-400"></i>
+              <span class="text-gray-300 font-medium">Mute Original Video</span>
+              <label class="relative inline-flex items-center cursor-pointer ml-1">
+                <input type="checkbox" id="muteOriginalToggle" class="sr-only peer" checked>
+                <div class="w-7 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-red"></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Speaker Voice Cloning Profile Selector -->
+          <div class="pt-2 border-t border-gray-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-gray-300 flex items-center space-x-1.5">
+                <i class="fa-solid fa-user-astronaut text-indigo-400"></i>
+                <span>Speaker Tone Preservation (Voice Clone):</span>
+              </span>
+              <span id="activeVoiceProfileLabel" class="text-xs text-indigo-400 font-semibold">Deep Tech Baritone</span>
+            </div>
+
+            <!-- Presets Chips -->
+            <div class="flex flex-wrap gap-2 text-xs">
+              <button class="voice-chip px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium border border-indigo-500 shadow transition" data-profile="baritone" data-pitch="0.82" data-rate="1.05">
+                Deep Baritone (MKBHD / Prasad Tech)
+              </button>
+              <button class="voice-chip px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium border border-gray-700 transition" data-profile="clone" data-pitch="1.0" data-rate="1.05">
+                Speaker Clone Match
+              </button>
+              <button class="voice-chip px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium border border-gray-700 transition" data-profile="vlogger" data-pitch="1.15" data-rate="1.20">
+                Energetic Vlogger
+              </button>
+              <button class="voice-chip px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium border border-gray-700 transition" data-profile="narrator" data-pitch="0.95" data-rate="0.95">
+                Calm Narrator
+              </button>
+              <button class="voice-chip px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium border border-gray-700 transition" data-profile="female" data-pitch="1.30" data-rate="1.02">
+                Expressive Female
+              </button>
+            </div>
+
+            <!-- Sliders -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>Pitch Tone: <span id="pitchValDisplay">0.82x</span></span>
+                  <span class="text-[11px] text-gray-500">Low to High</span>
+                </div>
+                <input type="range" id="pitchSlider" min="0.70" max="1.40" step="0.05" value="0.82" class="w-full accent-brand-red cursor-pointer">
+              </div>
+              <div>
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>Speed Cadence: <span id="rateValDisplay">1.05x</span></span>
+                  <span class="text-[11px] text-gray-500">Fast Dub</span>
+                </div>
+                <input type="range" id="rateSlider" min="0.80" max="1.50" step="0.05" value="1.05" class="w-full accent-indigo-500 cursor-pointer">
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Audio File Section -->
+          <div class="pt-3 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 bg-gray-950 p-3.5 rounded-xl">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-brand-red flex items-center justify-center border border-rose-500/20">
+                <i class="fa-solid fa-file-audio"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white">Translated Telugu Audio File (.wav)</div>
+                <div class="text-[11px] text-gray-400">Speaker cloned audio ready for offline playback</div>
+              </div>
+            </div>
+            
+            <button 
+              id="downloadAudioBtn"
+              class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center space-x-2 transition"
+            >
+              <i class="fa-solid fa-download"></i>
+              <span>Download Audio File (.wav)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Subtitle Segments & Audio Transcription (lg:col-span-5) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Tabs Header: Subtitles vs Transcribe Audio -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
+            <div class="flex space-x-2">
+              <button id="tabSubtitlesBtn" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-red text-white transition">
+                Synchronized Lines (<span id="segmentCountDisplay">5</span>)
+              </button>
+              <button id="tabTranscribeBtn" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                Transcribe Audio Mic
+              </button>
+            </div>
+
+            <!-- View switch -->
+            <select id="scriptModeSelect" class="bg-gray-800 text-gray-300 text-xs px-2.5 py-1 rounded-lg border border-gray-700 focus:outline-none">
+              <option value="both">Both Scripts</option>
+              <option value="telugu">తెలుగు Script Only</option>
+              <option value="roman">Tenglish Roman Only</option>
+            </select>
+          </div>
+
+          <!-- Subtitle Segments View Container -->
+          <div id="subtitlesViewContainer" class="space-y-3 max-h-[600px] overflow-y-auto custom-scroll pr-1">
+            <!-- Segments populated dynamically by JS -->
+          </div>
+
+          <!-- Audio Transcription View Container (Hidden initially) -->
+          <div id="transcribeViewContainer" class="hidden space-y-4">
+            <div class="text-center p-6 bg-gray-950 rounded-xl border border-gray-800 space-y-4">
+              <button 
+                id="micRecordBtn" 
+                class="w-16 h-16 rounded-full bg-brand-red text-white text-2xl shadow-lg shadow-rose-900/50 hover:bg-rose-600 transition transform active:scale-90 flex items-center justify-center mx-auto"
+              >
+                <i id="micIcon" class="fa-solid fa-microphone"></i>
+              </button>
+              <div>
+                <div id="micStatusText" class="text-xs font-bold text-gray-300">Tap to Speak & Transcribe</div>
+                <div class="text-[11px] text-gray-500">Converts your live voice into English-Telugu mix speech</div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-400">Or enter text / transcript:</label>
+              <textarea 
+                id="audioTranscribeTextInput"
+                rows="3" 
+                placeholder="Speak or paste audio lines to transcribe and dub into Tenglish..."
+                class="w-full p-3 bg-gray-950 border border-gray-800 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-red"
+              ></textarea>
+              <button 
+                id="transcribeAudioTextBtn"
+                class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center space-x-2"
+              >
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Transcribe & Dub into English-Telugu Mix</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- API Key Modal -->
+  <div id="apiKeyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <span>Gemini AI API Key</span>
+        </h3>
+        <button id="closeApiKeyModal" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-400">
+        TeluTube Dub connects directly to Gemini AI. By default, it runs with high-fidelity dynamic translation. You can enter your own Gemini API key below:
+      </p>
+
+      <input 
+        type="password" 
+        id="apiKeyInput" 
+        placeholder="Enter your Gemini API key (AIzaSy...)" 
+        class="w-full px-3.5 py-2.5 bg-gray-950 border border-gray-700 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-red"
+      />
+
+      <div class="flex justify-end space-x-2 pt-2">
+        <button id="clearApiKeyBtn" class="px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white">Clear</button>
+        <button id="saveApiKeyBtn" class="px-4 py-2 bg-brand-red hover:bg-rose-600 text-white font-bold text-xs rounded-xl shadow">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-800 bg-[#0B0F19] py-6 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>TeluTube Dub • Built with Jetpack Compose & Web Technologies</div>
+      <div class="flex items-center space-x-4">
+        <span>Bilingual Voice Dubbing</span>
+        <span>•</span>
+        <span>Telugu-English Mix</span>
+        <span>•</span>
+        <span>Speaker Tone Preserved</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

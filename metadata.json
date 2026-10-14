@@ -1,0 +1,6 @@
+{
+  "name": "TeluTube Dub",
+  "description": "Translate YouTube videos into natural English-Telugu mix with synchronized voice dubbing and interactive player",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

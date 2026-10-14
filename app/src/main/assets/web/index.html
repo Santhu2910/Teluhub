@@ -1,0 +1,143 @@
+<!-- TeluTube Dub Web Companion bundled inside Android App -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeluTube Dub - Web Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', 'Noto Sans Telugu', sans-serif; background-color: #090D16; color: #F9FAFB; }
+    .telugu-font { font-family: 'Noto Sans Telugu', sans-serif; }
+  </style>
+</head>
+<body class="p-4 sm:p-6 space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-indigo-600 flex items-center justify-center">
+        <i class="fa-solid fa-play text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-white">TeluTube Dub <span class="text-rose-500">Web</span></h1>
+        <p class="text-xs text-gray-400">English-Telugu Mix YouTube Voice Translation</p>
+      </div>
+    </div>
+    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
+      Online Web App
+    </span>
+  </div>
+
+  <!-- Quick Input -->
+  <div class="space-y-3 bg-gray-900 border border-gray-800 p-4 rounded-xl">
+    <label class="text-xs font-bold text-gray-300">YouTube Video URL:</label>
+    <div class="flex gap-2">
+      <input 
+        type="text" 
+        id="webUrlInput" 
+        value="https://www.youtube.com/watch?v=k1BneeJTDcU"
+        placeholder="https://www.youtube.com/watch?v=..." 
+        class="flex-1 p-2.5 bg-gray-950 border border-gray-700 rounded-lg text-xs text-white"
+      />
+      <button id="webTranslateBtn" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg transition">
+        Translate Fast
+      </button>
+    </div>
+  </div>
+
+  <!-- Player & Dub Section -->
+  <div class="space-y-4">
+    <div class="aspect-video w-full bg-black rounded-xl overflow-hidden border border-gray-800">
+      <iframe 
+        id="webIframe" 
+        class="w-full h-full"
+        src="https://www.youtube.com/embed/k1BneeJTDcU?enablejsapi=1" 
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- Voice Control -->
+    <div class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex items-center justify-between">
+      <button id="webPlayVoiceBtn" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl flex items-center space-x-2">
+        <i class="fa-solid fa-play"></i>
+        <span id="webPlayVoiceText">Play Dubbed Voice</span>
+      </button>
+      <button id="webDownloadAudio" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center space-x-2">
+        <i class="fa-solid fa-download"></i>
+        <span>Download Audio (.wav)</span>
+      </button>
+    </div>
+
+    <!-- Segments -->
+    <div id="webSegmentsContainer" class="space-y-3">
+      <!-- Populated via script -->
+    </div>
+  </div>
+
+  <script>
+    const sampleSegments = [
+      {
+        id: 1,
+        time: "00:00",
+        telugu: "నమస్తే friends! ఈరోజు మనం ఈ flagship phone camera & specs గురించి review చేద్దాం.",
+        roman: "Namaste friends! Eeroju manam ee flagship phone camera & specs gurinchi review cheddam."
+      },
+      {
+        id: 2,
+        time: "00:15",
+        telugu: "Build quality పరంగా చూస్తే, titanium frame చేతిలో noticeably చాలా light weight గా అనిపిస్తుంది.",
+        roman: "Build quality paranga chuste, titanium frame chetilo noticeably chaala light weight ga anipistundi."
+      },
+      {
+        id: 3,
+        time: "00:30",
+        telugu: "Display 120Hz LTPO OLED panel తో outdoor sunlight లో కూడా visual clarity super గా ఉంది.",
+        roman: "Display 120Hz LTPO OLED panel tho outdoor sunlight lo kooda visual clarity super ga undi."
+      }
+    ];
+
+    function renderWebSegments() {
+      const container = document.getElementById("webSegmentsContainer");
+      container.innerHTML = sampleSegments.map(s => `
+        <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl space-y-1">
+          <div class="text-[11px] font-bold text-rose-400">${s.time} • Tenglish Voice</div>
+          <div class="text-sm font-semibold text-white telugu-font">${s.telugu}</div>
+          <div class="text-xs text-gray-400 italic">${s.roman}</div>
+        </div>
+      `).join("");
+    }
+
+    renderWebSegments();
+
+    let isSpeaking = false;
+    document.getElementById("webPlayVoiceBtn").addEventListener("click", () => {
+      const synth = window.speechSynthesis;
+      if (isSpeaking) {
+        synth.cancel();
+        isSpeaking = false;
+        document.getElementById("webPlayVoiceText").textContent = "Play Dubbed Voice";
+      } else {
+        isSpeaking = true;
+        document.getElementById("webPlayVoiceText").textContent = "Pause Dubbed Voice";
+        const fullText = sampleSegments.map(s => s.telugu).join(". ");
+        const utter = new SpeechSynthesisUtterance(fullText);
+        utter.rate = 1.05;
+        utter.onend = () => {
+          isSpeaking = false;
+          document.getElementById("webPlayVoiceText").textContent = "Play Dubbed Voice";
+        };
+        synth.speak(utter);
+      }
+    });
+
+    document.getElementById("webDownloadAudio").addEventListener("click", () => {
+      alert("Telugu Dubbed .wav audio file generation triggered!");
+    });
+  </script>
+</body>
+</html>

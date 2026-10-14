@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Centered within 66dp safe zone (21 to 87) -->
+    <!-- Stylized Video Player Screen Card -->
+    <path
+        android:fillColor="#F43F5E"
+        android:pathData="M32,32 h44 c4.4,0 8,3.6 8,8 v28 c0,4.4 -3.6,8 -8,8 h-44 c-4.4,0 -8,-3.6 -8,-8 v-28 c0,-4.4 3.6,-8 8,-8 z" />
+    <!-- Play Triangle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,44 L64,54 L48,64 Z" />
+    <!-- Sound Wave Bars / Voice Dub Indicator at Bottom -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M30,76 h4 v6 h-4 z M38,72 h4 v10 h-4 z M46,69 h4 v13 h-4 z M54,71 h4 v11 h-4 z M62,69 h4 v13 h-4 z M70,73 h4 v9 h-4 z M78,76 h4 v6 h-4 z" />
+</vector>
